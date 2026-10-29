@@ -1,0 +1,83 @@
+import React, { lazy, useEffect, useState, Suspense } from "react";
+import Header from "./components/static/Header";
+import Footer from "./components/static/Footer";
+import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
+import SplashScreen from "./components/SplashScreen";
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Services = lazy(() => import("./pages/Services"));
+const Booking = lazy(() => import("./pages/Booking"));
+const Login = lazy(() => import("./auth/Login"));
+const Register = lazy(() => import("./auth/Register"));
+
+const Mainlayout = ({ children }) => (
+  <div className=" flex flex-col min-h-screen">
+    <Header />
+    <main className="grow">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-[50vh]"></div>
+        }
+      >
+        {children || <Outlet />}
+      </Suspense>
+    </main>
+    <Footer />
+  </div>
+);
+
+const AuthLayout = ({ children }) => (
+  <div className=" flex flex-col min-h-screen">
+    <main className="grow">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-[50vh]"></div>
+        }
+      >
+        {children || <Outlet />}
+      </Suspense>
+    </main>
+  </div>
+);
+
+// const AdminLayout = ({children}) => (
+
+// );
+const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <ScrollToTop />
+      {loading ? (
+        <SplashScreen />
+      ) : (
+        <Routes>
+          <Route element={<Mainlayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/booking" element={<Booking />} />
+          </Route>
+
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
+        </Routes>
+      )}
+    </BrowserRouter>
+  );
+};
+
+export default App;
