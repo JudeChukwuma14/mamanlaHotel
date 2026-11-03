@@ -23,7 +23,7 @@ export default function AuthImageSlider({ images = [] }) {
 
   if (total === 0) {
     return (
-      <div className="w-full h-full bg-gradient-to-br from-[#0c6478] to-[#0bd0c7] flex items-center justify-center">
+      <div className="w-full h-full bg-linear-to-br from-[#0c6478] to-[#0bd0c7] flex items-center justify-center">
         <span className="text-white/60 text-sm">No images provided</span>
       </div>
     );
@@ -34,14 +34,14 @@ export default function AuthImageSlider({ images = [] }) {
 
   return (
     <div
-      className="relative w-full h-full overflow-hidden select-none"
+      className="relative w-full h-full overflow-hidden select-none "
       role="region"
       aria-label="Hotel image slideshow"
     >
       {/* Slides */}
       <div className="w-full h-full">
         {hasError ? (
-          <div className="w-full h-full bg-gradient-to-br from-[#0c6478] to-[#0bd0c7] flex items-center justify-center">
+          <div className="w-full h-full bg-linear-to-br from-[#0c6478] to-[#0bd0c7] flex items-center justify-center">
             <div className="text-center text-white/80 px-6">
               <div className="text-5xl mb-4">🏨</div>
               <p className="font-semibold text-lg">
@@ -66,7 +66,7 @@ export default function AuthImageSlider({ images = [] }) {
 
         {/* Caption overlay */}
         {slide.caption && !hasError && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-6 py-4">
+          <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/60 to-transparent px-6 py-4">
             <p className="text-white font-semibold text-base drop-shadow">
               {slide.caption}
             </p>

@@ -4,6 +4,8 @@ import Footer from "./components/static/Footer";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import SplashScreen from "./components/SplashScreen";
+import { Toaster } from "react-hot-toast";
+
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -61,6 +63,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <Toaster position="top-right" reverseOrder={false} />
       {loading ? (
         <SplashScreen />
       ) : (
