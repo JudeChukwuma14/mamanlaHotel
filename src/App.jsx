@@ -11,6 +11,9 @@ const Services = lazy(() => import("./pages/Services"));
 const Booking = lazy(() => import("./pages/Booking"));
 const Login = lazy(() => import("./auth/Login"));
 const Register = lazy(() => import("./auth/Register"));
+const ForgotPassword = lazy(() => import("./auth/ForgotPassword"));
+const Otp = lazy(() => import("./auth/Otp"));
+const ResetPassword = lazy(() => import("./auth/ResetPassword"));
 
 const Mainlayout = ({ children }) => (
   <div className=" flex flex-col min-h-screen">
@@ -73,6 +76,12 @@ const App = () => {
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/otp" element={<Otp />} />
+            <Route path="/verify-otp" element={<Otp />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/resetpassword" element={<ResetPassword />} />
           </Route>
         </Routes>
       )}
