@@ -41,8 +41,12 @@ const authSlice = createSlice({
         }
     }
 })
-export const {setCredentials, logout,setError,clearError} = authSlice.actions
+export const { setCredentials, logout, setError, clearError } = authSlice.actions
 
+export const selectCurrentUser = (state) => state.auth?.user
+export const selectIsAuthenticated = (state) => state.auth?.isAuthenticated
+export const selectAccessToken = (state) => state.auth?.accessToken
+export const selectIsAdmin = (state) => state.auth?.user?.role === "admin"
 
 
 

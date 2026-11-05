@@ -1,17 +1,17 @@
-import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Loader2, ShieldCheck, RefreshCw } from 'lucide-react';
-import toast from 'react-hot-toast';
-import AuthLayout from '../components/AuthLayout';
-
+import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft, Loader2, ShieldCheck, RefreshCw } from "lucide-react";
+import toast from "react-hot-toast";
+import AuthLayout from "../components/AuthLayout";
+import { resendOtpApi, verifyEmailApi } from "../api/endpoints";
 
 export default function VerifyOtp() {
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email || '';
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const email = location.state?.email || "";
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
-  const [cooldown, setCooldown] = useState(60); 
+  const [cooldown, setCooldown] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const [resending, setResending] = useState(false);
 
@@ -41,44 +41,80 @@ export default function VerifyOtp() {
   }
 
   function handleKeyDown(e, index) {
-    if (e.key === 'Backspace') {
+    if (e.key === "Backspace") {
       if (!otp[index] && index > 0) {
         inputRefs.current[index - 1]?.focus();
         const newOtp = [...otp];
-        newOtp[index - 1] = '';
+        newOtp[index - 1] = "";
         setOtp(newOtp);
       } else {
         const newOtp = [...otp];
-        newOtp[index] = '';
+        newOtp[index] = "";
         setOtp(newOtp);
       }
-    } else if (e.key === 'ArrowLeft' && index > 0) {
+    } else if (e.key === "ArrowLeft" && index > 0) {
       inputRefs.current[index - 1]?.focus();
-    } else if (e.key === 'ArrowRight' && index < 5) {
+    } else if (e.key === "ArrowRight" && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   }
 
   function handlePaste(e) {
     e.preventDefault();
-    const pasted = e.clipboardData.getData('text').trim().replace(/\D/g, '').slice(0, 6);
+    const pasted = e.clipboardData
+      .getData("text")
+      .trim()
+      .replace(/\D/g, "")
+      .slice(0, 6);
     if (!pasted) return;
     const newOtp = [...otp];
-    pasted.split('').forEach((char, idx) => {
+    pasted.split("").forEach((char, idx) => {
       if (idx < 6) newOtp[idx] = char;
     });
     setOtp(newOtp);
-    const nextEmpty = newOtp.findIndex((v) => v === '');
+    const nextEmpty = newOtp.findIndex((v) => v === "");
     inputRefs.current[nextEmpty !== -1 ? nextEmpty : 5]?.focus();
   }
 
-  async function handleResend() {
-   
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const code = otp.join("");
+    if (code.length < 6) {
+      toast.error("Please enter all 6 digits");
+      return;
+    }
 
-  async function handleSubmit(e) {
-   
-  }
+    setLoading(true);
+    try {
+      const res = await verifyEmailApi({ email, otp: code });
+      const successMgs = res.data?.message || "Email verified successfully";
+      toast.success(successMgs);
+      navigate("/login", { state: { isVerified: true } });
+    } catch (error) {
+      const res = error.response?.data;
+      const message = res.message;
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!canResend || resending) return;
+    setResending(true);
+
+    try {
+      const res = await resendOtpApi({ email });
+      toast(res.data?.message);
+    } catch (error) {
+      const res = error.response.data;
+      toast.error(res?.message);
+    } finally {
+      setResending(false);
+      setCanResend(false);
+      setCooldown(60);
+    }
+  };
 
   // If landed here without an email
   if (!email) {
@@ -86,7 +122,10 @@ export default function VerifyOtp() {
       <AuthLayout>
         <div className="text-center py-10">
           <p className="text-gray-500 mb-4">No email address provided.</p>
-          <Link to="/register" className="text-[#0c6478] font-semibold hover:text-[#0bd0c7]">
+          <Link
+            to="/register"
+            className="text-[#0c6478] font-semibold hover:text-[#0bd0c7]"
+          >
             Go to Register
           </Link>
         </div>
@@ -109,7 +148,11 @@ export default function VerifyOtp() {
 
       {/* Logo */}
       <div className="mb-6 flex justify-center md:justify-start">
-        <img src="/Hlogo.png" alt="Mama La Hotel" className="h-12 w-auto object-contain" />
+        <img
+          src="/Hlogo.png"
+          alt="Mama La Hotel"
+          className="h-12 w-auto object-contain"
+        />
       </div>
 
       {/* Header */}
@@ -120,8 +163,9 @@ export default function VerifyOtp() {
         </div>
       </div>
       <p className="text-gray-500 text-sm mb-6">
-        We sent a 6-digit code to{' '}
-        <span className="font-semibold text-[#15343b]">{email}</span>. Enter it below to verify your account.
+        We sent a 6-digit code to{" "}
+        <span className="font-semibold text-[#15343b]">{email}</span>. Enter it
+        below to verify your account.
       </p>
 
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
@@ -147,8 +191,8 @@ export default function VerifyOtp() {
                 aria-label={`Digit ${idx + 1}`}
                 className={`w-11 h-13 sm:w-13 sm:h-14 text-center text-xl sm:text-2xl font-bold rounded-lg border text-[#15343b] focus:outline-none focus:ring-2 focus:ring-[#0bd0c7] focus:border-transparent transition-all ${
                   digit
-                    ? 'border-[#0c6478] bg-[#0bd0c7]/5'
-                    : 'border-gray-300 bg-white'
+                    ? "border-[#0c6478] bg-[#0bd0c7]/5"
+                    : "border-gray-300 bg-white"
                 }`}
               />
             ))}
@@ -162,10 +206,12 @@ export default function VerifyOtp() {
               "Didn't receive the code?"
             ) : (
               <>
-                Resend code in{' '}
+                Resend code in{" "}
                 <span className="font-semibold text-[#0c6478]">
-                  {Math.floor(cooldown / 60).toString().padStart(2, '0')}:
-                  {(cooldown % 60).toString().padStart(2, '0')}
+                  {Math.floor(cooldown / 60)
+                    .toString()
+                    .padStart(2, "0")}
+                  :{(cooldown % 60).toString().padStart(2, "0")}
                 </span>
               </>
             )}
@@ -178,8 +224,11 @@ export default function VerifyOtp() {
               disabled={resending}
               className="inline-flex items-center gap-1.5 font-semibold text-[#0c6478] hover:text-[#0bd0c7] transition-colors disabled:opacity-50"
             >
-              <RefreshCw size={14} className={resending ? 'animate-spin' : ''} />
-              {resending ? 'Sending…' : 'Resend Code'}
+              <RefreshCw
+                size={14}
+                className={resending ? "animate-spin" : ""}
+              />
+              {resending ? "Sending…" : "Resend Code"}
             </button>
           )}
         </div>
@@ -191,13 +240,13 @@ export default function VerifyOtp() {
           className="w-full flex items-center justify-center gap-2 bg-[#0c6478] hover:bg-[#0a536a] disabled:opacity-70 disabled:cursor-not-allowed text-white rounded-lg px-6 py-2.5 font-semibold transition-colors duration-200"
         >
           {loading && <Loader2 size={18} className="animate-spin" />}
-          {loading ? 'Verifying…' : 'Verify & Continue'}
+          {loading ? "Verifying…" : "Verify & Continue"}
         </button>
       </form>
 
       {/* Footer */}
       <p className="mt-8 text-center text-sm text-gray-500">
-        Wrong email?{' '}
+        Wrong email?{" "}
         <Link
           to="/register"
           className="text-[#0c6478] hover:text-[#0bd0c7] font-semibold transition-colors duration-200"

@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import SplashScreen from "./components/SplashScreen";
 import { Toaster } from "react-hot-toast";
+import { ProtectedRoute, PublicOnlyRoute } from "./auth/AuthGuards";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
@@ -63,7 +64,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       {loading ? (
         <SplashScreen />
       ) : (
@@ -73,12 +74,21 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/booking" element={<Booking />} />
+          </Route>
+
+          <Route element={<Mainlayout />}>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/booking" element={<Booking />} />
+            </Route>
           </Route>
 
           <Route element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route element={<PublicOnlyRoute />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
+          </Route>
+          <Route element={<AuthLayout />}>
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/otp" element={<Otp />} />

@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import AuthLayout from "../components/AuthLayout";
-
+import { loginApi } from "../api/endpoints";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../redux/slices/authSlice";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [fields, setFields] = useState({
     email: "",
     password: "",
@@ -37,14 +41,45 @@ export default function Login() {
       toast.error("Password is required.");
       return;
     }
-    if (fields.password.length < 6) {
-      toast.error("Password must be at least 6 characters.");
+    if (fields.password.length < 8) {
+      toast.error("Password must be at least 8 characters.");
       return;
     }
 
     setLoading(true);
 
-  
+    try {
+      const res = await loginApi({
+        email: fields.email,
+        password: fields.password,
+      });
+
+      const { user, accessToken } = res.data;
+
+      dispatch(setCredentials({ user, accessToken }));
+      toast.success(
+        res.data.message ||
+          `Welcome back, ${user?.userName || user.email.split("@")[0] || "User"}`,
+      );
+
+      if (user.role === "admin") {
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
+    } catch (err) {
+      const res = err.response?.data;
+      if (err.response?.status === 403 && res?.code === "EMAIL_NOT_VERIFIED") {
+        toast.error("Your email is not verified");
+        navigate("/verify-otp", { state: { email: fields.email } });
+        return;
+      }
+
+      const message = res.message || "Login failed, Please try again";
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

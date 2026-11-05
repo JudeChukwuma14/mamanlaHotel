@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
 import AuthLayout from "../components/AuthLayout";
+import { forgotPasswordApi } from "../api/endpoints";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -29,10 +30,19 @@ export default function ForgotPassword() {
 
     setLoading(true);
 
+    try {
+      const res = await forgotPasswordApi({ email: fields.email });
+      toast.success(res.data.message);
+      navigate("/otp", { state: { email: fields.email } });
+    } catch (err) {
+      const res = err.response.data;
+      toast.error(res?.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleProceed() {
-    
   }
 
   return (

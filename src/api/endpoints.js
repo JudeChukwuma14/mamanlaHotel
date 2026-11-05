@@ -20,3 +20,24 @@ export const registerApi = (userData)=>{
     return api.post(ENDPOINTS.AUTH.REGISTER, userData)
 }
 
+
+export const verifyEmailApi = (data)=>{
+    return api.post(ENDPOINTS.AUTH.VERIFY_EMAIL, data)
+}
+
+export const resendOtpApi = (data)=>{
+    return api.post(ENDPOINTS.AUTH.RESEND_OTP, data)
+}
+
+
+export const loginApi = (credentials)=>{
+    return api.post(ENDPOINTS.AUTH.LOGIN, credentials)
+}
+
+export const forgotPasswordApi = (data)=>{
+    return api.post(ENDPOINTS.AUTH.FORGOT_PASSWORD, data) 
+}
+
+export const resetPasswordApi = (data)=>{
+    return api.post(ENDPOINTS.AUTH.RESET_PASSWORD, data)  
+}
