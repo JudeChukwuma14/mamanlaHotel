@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react";
 
 const SplashScreen = () => {
   return (
-    <div className=" fixed inset-0 z-100 flex flex-col items-center justify-center bg-linear-to-br from-[#0c6478] to-[#0bd0c7] text-white">
+    <div className=" fixed inset-0 z-100 flex flex-col items-center justify-center bg-linear-to-br from-[#0c6478] to-[rgb(11,208,199)] text-white">
       <div className="mb-8 animate-pulse text-center">
         <h1 className="text-4xl font-black tracking-tighter sm:text-6xl capitalize drop-shadow-xl">
           Mamanla
