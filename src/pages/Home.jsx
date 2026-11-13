@@ -3,49 +3,11 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Star, RefreshCw, AlertCircle } from "lucide-react";
 import RoomCard from "../components/RoomCard";
 import axiosInstance from "../api/axiosInstance";
+import Distinction from "../components/Distinction";
+import Amenities from "../components/Amenties";
+import SpecialOffers from "../components/Specialoffers";
 
-// Fallback preview rooms when backend is unreachable
-// const PREVIEW_ROOMS = [
-//   {
-//     _id: "preview-1",
-//     name: "Deluxe Ocean Suite",
-//     description:
-//       "Panoramic ocean views, plush king-size bed, private sunset balcony, and luxury marble bathroom.",
-//     pricePerNight: 120000,
-//     slug: "deluxe-ocean-suite",
-//     images: [
-//       {
-//         url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80",
-//       },
-//     ],
-//   },
-//   {
-//     _id: "preview-2",
-//     name: "Presidential Penthouse",
-//     description:
-//       "Exclusive top-floor suite featuring private infinity jacuzzi, personal concierge, and expansive lounge.",
-//     pricePerNight: 280000,
-//     slug: "presidential-penthouse",
-//     images: [
-//       {
-//         url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
-//       },
-//     ],
-//   },
-//   {
-//     _id: "preview-3",
-//     name: "Executive Garden Villa",
-//     description:
-//       "Secluded tropical sanctuary surrounded by lush private gardens, featuring a plunge pool and bespoke amenities.",
-//     pricePerNight: 175000,
-//     slug: "executive-garden-villa",
-//     images: [
-//       {
-//         url: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80",
-//       },
-//     ],
-//   },
-// ];
+
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
@@ -116,7 +78,7 @@ const Home = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative min-h-[650px] lg:min-h-[750px] flex items-center overflow-hidden">
+      <section className="relative min-h-162.5 lg:min-h-187.5 flex items-center overflow-hidden">
         {/* Background Video */}
         <video
           autoPlay
@@ -131,8 +93,8 @@ const Home = () => {
         </video>
 
         {/* Luxury Brand Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#03151b]/90 via-[#062c35]/50 to-black/25"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-[#03151b]/90 via-[#062c35]/50 to-black/25"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30"></div>
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
@@ -186,30 +148,14 @@ const Home = () => {
             </p>
           </div>
 
-          {/* {backendOffline && (
-            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 max-w-4xl mx-auto text-amber-900 text-sm">
-              <div className="flex items-center gap-2.5">
-                <AlertCircle size={18} className="text-amber-600 shrink-0" />
-                <span>
-                  <strong>Preview Mode:</strong> {errorMessage}. (Showing sample suites below).
-                </span>
-              </div>
-              {<button
-                onClick={fetchFeaturedRooms}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0C6478] hover:bg-[#094d5c] text-white rounded-full text-xs font-semibold transition shrink-0"
-              >
-                <RefreshCw size={13} />
-                Retry Connection
-              </button>}
-            </div>
-          )} */}
+
 
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="border border-gray-200 rounded-2xl bg-white h-[400px] animate-pulse"
+                  className="border border-gray-200 rounded-2xl bg-white h-100 animate-pulse"
                 />
               ))}
             </div>
@@ -222,6 +168,9 @@ const Home = () => {
           )}
         </div>
       </section>
+      <Distinction />
+      <Amenities />
+      <SpecialOffers />
     </>
   );
 };
