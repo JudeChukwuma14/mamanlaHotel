@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import RoomCard from '../components/RoomCard';
-import axiosInstance from '../api/axiosInstance';
+import { fetchRoomsApi } from '../api/endpoints';
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -15,7 +15,7 @@ const Rooms = () => {
   useEffect(() => {
     const fetchAllRooms = async () => {
       try {
-        const response = await axiosInstance.get('/api/v1/rooms');
+        const response = await fetchRoomsApi();
         const data = response.data;
         
         // Safely extract the rooms array from the response object

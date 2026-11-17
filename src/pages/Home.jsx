@@ -23,11 +23,11 @@ const Home = () => {
     try {
       let response;
       try {
-        response = await axiosInstance.get("/api/v1/rooms/featured");
+        response = await axiosInstance.get("/api/v1/rooms");
       } catch (firstErr) {
         // If /api/v1/rooms/featured is 404, fallback to /rooms/featured
         if (firstErr.response?.status === 404) {
-          response = await axiosInstance.get("/rooms/featured");
+          response = await axiosInstance.get("/api/v1/room");
         } else {
           throw firstErr;
         }
