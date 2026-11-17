@@ -32,7 +32,7 @@ const Home = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative min-h-[650px] lg:min-h-[750px] flex items-center overflow-hidden">
+      <section className="relative min-h-162.5 lg:min-h-187.5 flex items-center overflow-hidden">
         {/* Background Video */}
         <video
           autoPlay
@@ -47,8 +47,8 @@ const Home = () => {
         </video>
 
         {/* Luxury Brand Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#03151b]/90 via-[#062c35]/50 to-black/25"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-[#03151b]/90 via-[#062c35]/50 to-black/25"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30"></div>
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
@@ -107,7 +107,7 @@ const Home = () => {
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="border border-gray-200 rounded-2xl bg-white h-[400px] animate-pulse"
+                  className="border border-gray-200 rounded-2xl bg-white h-100 animate-pulse"
                 />
               ))}
             </div>
@@ -120,6 +120,9 @@ const Home = () => {
           )}
         </div>
       </section>
+      <Distinction />
+      <Amenities />
+      <SpecialOffers />
     </>
   );
 };
