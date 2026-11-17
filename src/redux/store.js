@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import storageModule from "redux-persist/lib/storage";
 import authReducer from "./slices/authSlice";
+import bookingReducer from "./slices/bookingSlice";
 
 // Handle ESM/CJS interop for redux-persist/lib/storage in Vite
 const createFallbackStorage = () => ({
@@ -33,11 +34,12 @@ const persistConfig = {
   key: "mamala_hotel_auth",
   version: 1,
   storage,
-  whitelist: ["auth"], // Only persist auth state across page refreshes
+  whitelist: ["auth"], // booking state is NOT persisted (ephemeral)
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  booking: bookingReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -47,7 +49,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Required: redux-persist dispatches non-serializable actions
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),

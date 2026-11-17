@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { fetchRoomBySlugApi } from '../api/endpoints';
 import axiosInstance from '../api/axiosInstance';
 import { BedDouble,  Users, Maximize2,DoorOpen } from 'lucide-react';
 
@@ -13,7 +14,7 @@ const RoomDetails = () => {
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
-        const response = await axiosInstance.get(`/api/v1/rooms/${slug}`);
+        const response = await fetchRoomBySlugApi(slug);
         const data = response.data;
         setRoom(data.room || data);
       } catch (err) {
@@ -121,7 +122,8 @@ const RoomDetails = () => {
 
           <Link 
             to="/booking" 
-            className="w-full mt-8 bg-teal-700 hover:bg-teal-800 text-white font-semibold py-4 rounded-xl text-center shadow-sm transition"
+            state={{ room }}
+            className="w-full mt-8 bg-[#0c6478] hover:bg-[#0a536a] text-white font-semibold py-4 rounded-xl text-center shadow-sm transition block"
           >
             Book This Room Now
           </Link>

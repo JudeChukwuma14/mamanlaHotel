@@ -12,6 +12,8 @@ const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Services = lazy(() => import("./pages/Services"));
 const Booking = lazy(() => import("./pages/Booking"));
+const BookingConfirmation = lazy(() => import("./pages/BookingConfirmationPage"));
+const MyBookings = lazy(() => import("./pages/MyBookingsPage"));
 const Login = lazy(() => import("./auth/Login"));
 const Register = lazy(() => import("./auth/Register"));
 const ForgotPassword = lazy(() => import("./auth/ForgotPassword"));
@@ -50,9 +52,6 @@ const AuthLayout = ({ children }) => (
   </div>
 );
 
-// const AdminLayout = ({children}) => (
-
-// );
 const App = () => {
   const [loading, setLoading] = useState(true);
 
@@ -71,21 +70,29 @@ const App = () => {
         <SplashScreen />
       ) : (
         <Routes>
+          {/* Public pages with Main layout */}
           <Route element={<Mainlayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/services" element={<Services />} />
-       <Route path="/rooms" element={<Rooms />} />     
+            <Route path="/rooms" element={<Rooms />} />
             <Route path="/rooms/:slug" element={<RoomDetails />} />
           </Route>
 
+          {/* Protected Guest & Booking pages */}
           <Route element={<Mainlayout />}>
             <Route element={<ProtectedRoute />}>
               <Route path="/booking" element={<Booking />} />
+              <Route
+                path="/booking/confirmation/:bookingReference"
+                element={<BookingConfirmation />}
+              />
+              <Route path="/my-bookings" element={<MyBookings />} />
             </Route>
           </Route>
 
+          {/* Auth pages */}
           <Route element={<AuthLayout />}>
             <Route element={<PublicOnlyRoute />}>
               <Route path="/login" element={<Login />} />
