@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
+import { BedDouble,  Users, Maximize2,DoorOpen } from 'lucide-react';
 
 const RoomDetails = () => {
   const { slug } = useParams();
@@ -78,13 +79,31 @@ const RoomDetails = () => {
               ₦{room.pricePerNight?.toLocaleString() || '0'} <span className="text-sm font-normal text-gray-500">/ night</span>
             </p>
             <p className="text-gray-600 leading-relaxed mb-6">{room.description}</p>
+<div className="border-t border-b border-gray-100 py-4 my-6 grid grid-cols-2 gap-4 text-sm">
+  <div className="flex items-center gap-2">
+    <BedDouble className="w-4 h-4 text-teal-700 shrink-0" />
+    <span>Bed: <span className="font-medium capitalize">{room.numberOfBeds} {room.bedType}</span></span>
+  </div>
 
-            <div className="border-t border-b border-gray-100 py-4 my-6 grid grid-cols-2 gap-4 text-sm">
-              <div>🛏️ Bed: <span className="font-medium capitalize">{room.numberOfBeds} {room.bedType}</span></div>
-              <div>👥 Max Guests: <span className="font-medium">{room.maximumAdults} Adults, {room.maximumChildren} Children</span></div>
-              {room.roomSize && <div>📐 Size: <span className="font-medium">{room.roomSize} sqm</span></div>}
-              {room.totalRooms && <div>🚪 Available Units: <span className="font-medium">{room.totalRooms}</span></div>}
-            </div>
+  <div className="flex items-center gap-2">
+    <Users className="w-4 h-4 text-teal-700 shrink-0" />
+    <span>Max Guests: <span className="font-medium">{room.maximumAdults} Adults, {room.maximumChildren} Children</span></span>
+  </div>
+
+  {room.roomSize && (
+    <div className="flex items-center gap-2">
+      <Maximize2 className="w-4 h-4 text-teal-700 shrink-0" />
+      <span>Size: <span className="font-medium">{room.roomSize} sqm</span></span>
+    </div>
+  )}
+
+  {room.totalRooms && (
+    <div className="flex items-center gap-2">
+      <DoorOpen className="w-4 h-4 text-teal-700 shrink-0" />
+      <span>Available Units: <span className="font-medium">{room.totalRooms}</span></span>
+    </div>
+  )}
+</div>
 
             {room.amenities && room.amenities.length > 0 && (
               <>

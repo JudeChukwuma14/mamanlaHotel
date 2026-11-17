@@ -53,13 +53,21 @@ const RoomCard = ({ room }) => {
           {room?.description || "Experience comfort and relaxation in our premier suite."}
         </p>
 
-        {/* Dynamic Navigation Trigger Link */}
-        <Link
-          to={roomPath}
-          className="w-full block bg-[#0C6478] hover:bg-[#094d5c] text-white font-medium py-2.5 rounded-xl transition text-center text-sm shadow-sm"
-        >
-          View Details
-        </Link>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3 mt-auto pt-2">
+          <Link
+            to={roomPath}
+            className="flex-1 border border-[#0C6478] text-[#0C6478] hover:bg-[#0C6478] hover:text-white font-medium py-2.5 rounded-xl transition-colors duration-200 text-center text-sm shadow-sm"
+          >
+            View Details
+          </Link>
+          <Link
+            to={`/booking?room=${room?.slug || room?._id || ""}`}
+            className="flex-1 bg-[#0C6478] hover:bg-[#094d5c] text-white font-medium py-2.5 rounded-xl transition-colors duration-200 text-center text-sm shadow-sm"
+          >
+            Book Now
+          </Link>
+        </div>
       </div>
     </div>
   );
