@@ -2,11 +2,9 @@ import axios from "axios";
 import { store } from "../redux/store";
 import { setCredentials, logout } from "../redux/slices/authSlice";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://mamanlahotelbackend.onrender.com";
-
 const api = axios.create({
-  baseURL: API_BASE,
-  withCredentials: true,
+  baseURL: "https://mamanlahotelbackend.onrender.com",
+  withCredentials: true, // Sends & receives HttpOnly refresh-token cookie
   headers: {
     "Content-Type": "application/json",
   },
@@ -42,7 +40,7 @@ api.interceptors.response.use(
       try {
         // Browser automatically sends the HttpOnly refresh-token cookie
         const response = await axios.post(
-          `${API_BASE}/auth/refresh`,
+          "https://mamanlahotelbackend.onrender.com/auth/refresh",
           {},
           { withCredentials: true }
         );
