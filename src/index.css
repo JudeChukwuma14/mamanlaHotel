@@ -1,5 +1,38 @@
 @import "tailwindcss";
 
+
+
+@theme {
+  --color-brand-navy: #0b192c;
+  --color-brand-navy-light: #142742;
+  --color-brand-gold: #c5a880;
+  --color-brand-gold-light: #dfcaa7;
+  --color-brand-gold-dark: #9b7e54;
+  --color-brand-cream: #fbf9f5;
+  --color-brand-cream-dim: #f5f2eb;
+  --color-brand-cream-border: #e7e2d7;
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-display: "Cinzel", serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.gold-shimmer {
+  background: linear-gradient(135deg, #c5a880 0%, #e2d2b5 50%, #b89868 100%);
+}
+
+.custom-input {
+  background-color: #ffffff;
+  border: 1px solid #e5e0d4;
+  transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #c5a880;
+  box-shadow: 0 0 0 3px rgba(197, 168, 128, 0.18);
+}
+
 /* Hide scrollbar utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

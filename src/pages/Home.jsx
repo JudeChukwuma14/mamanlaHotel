@@ -1,117 +1,33 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Star, RefreshCw, AlertCircle } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import RoomCard from "../components/RoomCard";
-import axiosInstance from "../api/axiosInstance";
-
-// Fallback preview rooms when backend is unreachable
-// const PREVIEW_ROOMS = [
-//   {
-//     _id: "preview-1",
-//     name: "Deluxe Ocean Suite",
-//     description:
-//       "Panoramic ocean views, plush king-size bed, private sunset balcony, and luxury marble bathroom.",
-//     pricePerNight: 120000,
-//     slug: "deluxe-ocean-suite",
-//     images: [
-//       {
-//         url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80",
-//       },
-//     ],
-//   },
-//   {
-//     _id: "preview-2",
-//     name: "Presidential Penthouse",
-//     description:
-//       "Exclusive top-floor suite featuring private infinity jacuzzi, personal concierge, and expansive lounge.",
-//     pricePerNight: 280000,
-//     slug: "presidential-penthouse",
-//     images: [
-//       {
-//         url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
-//       },
-//     ],
-//   },
-//   {
-//     _id: "preview-3",
-//     name: "Executive Garden Villa",
-//     description:
-//       "Secluded tropical sanctuary surrounded by lush private gardens, featuring a plunge pool and bespoke amenities.",
-//     pricePerNight: 175000,
-//     slug: "executive-garden-villa",
-//     images: [
-//       {
-//         url: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80",
-//       },
-//     ],
-//   },
-// ];
+import { PREVIEW_ROOMS, fetchFeaturedRoomsApi } from "../api/roomService";
 
 const Home = () => {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState(PREVIEW_ROOMS);
   const [loading, setLoading] = useState(true);
-  const [backendOffline, setBackendOffline] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const fetchFeaturedRooms = useCallback(async () => {
-    setLoading(true);
-    setBackendOffline(false);
-    setErrorMessage("");
-
-    try {
-      let response;
-      try {
-        response = await axiosInstance.get("/api/v1/rooms/featured");
-      } catch (firstErr) {
-        // If /api/v1/rooms/featured is 404, fallback to /rooms/featured
-        if (firstErr.response?.status === 404) {
-          response = await axiosInstance.get("/rooms/featured");
-        } else {
-          throw firstErr;
-        }
-      }
-
-      const data = response?.data;
-      console.log("Backend Data Response:", data);
-
-      // Robust extraction across different backend response patterns
-      const roomList = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.rooms)
-          ? data.rooms
-          : Array.isArray(data?.data)
-            ? data.data
-            : Array.isArray(data?.data?.rooms)
-              ? data.data.rooms
-              : Array.isArray(data?.featuredRooms)
-                ? data.featuredRooms
-                : [];
-
-      if (roomList.length > 0) {
-        setRooms(roomList);
-        setBackendOffline(false);
-      } else {
-        // Backend reached but no rooms in database yet -> use preview rooms
-        setRooms([]);
-      }
-    } catch (err) {
-      console.error("Error fetching featured rooms:", err);
-      setBackendOffline(true);
-      setErrorMessage(
-        err.code === "ERR_NETWORK" || err.message?.includes("Network Error")
-          ? "Backend server is not running or unreachable"
-          : err.response?.data?.message || err.message || "Failed to load rooms"
-      );
-      // Keep preview rooms visible so page is never empty
-      setRooms([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   useEffect(() => {
-    fetchFeaturedRooms();
-  }, [fetchFeaturedRooms]);
+    let isMounted = true;
+    fetchFeaturedRoomsApi()
+      .then((data) => {
+        if (isMounted) {
+          setRooms(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setRooms(PREVIEW_ROOMS);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <>
@@ -144,12 +60,12 @@ const Home = () => {
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mb-6 drop-shadow-md">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mb-6">
               Your Comfort,
               <span className="text-[#0BD0C7]"> Our Priority.</span>
             </h1>
 
-            <p className="text-gray-200 text-base md:text-lg leading-8 mb-9 drop-shadow-sm">
+            <p className="text-gray-200 text-base md:text-lg leading-8 mb-9">
               Experience exceptional hospitality, relaxing spaces, and
               unforgettable stays at Mamanla Hotel & Co.
             </p>
@@ -163,12 +79,12 @@ const Home = () => {
                 <ArrowRight size={18} />
               </Link>
 
-              <a
-                href="#booking"
+              <Link
+                to="/booking"
                 className="border border-white px-7 py-4 rounded-full font-semibold hover:bg-white hover:text-[#0C6478] transition"
               >
                 Book Your Stay
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -185,24 +101,6 @@ const Home = () => {
               Handpicked premium hotel suites for your stay.
             </p>
           </div>
-
-          {/* {backendOffline && (
-            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 max-w-4xl mx-auto text-amber-900 text-sm">
-              <div className="flex items-center gap-2.5">
-                <AlertCircle size={18} className="text-amber-600 shrink-0" />
-                <span>
-                  <strong>Preview Mode:</strong> {errorMessage}. (Showing sample suites below).
-                </span>
-              </div>
-              {<button
-                onClick={fetchFeaturedRooms}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0C6478] hover:bg-[#094d5c] text-white rounded-full text-xs font-semibold transition shrink-0"
-              >
-                <RefreshCw size={13} />
-                Retry Connection
-              </button>}
-            </div>
-          )} */}
 
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

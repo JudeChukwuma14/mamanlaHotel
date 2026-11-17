@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const DEFAULT_ROOM_IMAGE =
@@ -27,7 +26,7 @@ const RoomCard = ({ room }) => {
       : "/rooms";
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 flex flex-col h-full">
+    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 flex flex-col h-full">
       {/* Room Image Container */}
       <div className="relative h-64 w-full bg-gray-100 overflow-hidden">
         <img
@@ -39,7 +38,7 @@ const RoomCard = ({ room }) => {
           }}
           className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-sm font-semibold text-gray-900 shadow-sm">
+        <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-sm font-semibold text-gray-900 border border-gray-100">
           ₦{Number(price).toLocaleString()} / night
         </div>
       </div>
@@ -53,13 +52,22 @@ const RoomCard = ({ room }) => {
           {room?.description || "Experience comfort and relaxation in our premier suite."}
         </p>
 
-        {/* Dynamic Navigation Trigger Link */}
-        <Link
-          to={roomPath}
-          className="w-full block bg-[#0C6478] hover:bg-[#094d5c] text-white font-medium py-2.5 rounded-xl transition text-center text-sm shadow-sm"
-        >
-          View Details
-        </Link>
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-2 mt-auto">
+          <Link
+            to="/booking"
+            state={{ selectedRoom: room }}
+            className="w-full block bg-[#0C6478] hover:bg-[#094d5c] text-white font-medium py-2.5 rounded-xl transition text-center text-sm"
+          >
+            Book Now
+          </Link>
+          <Link
+            to={roomPath}
+            className="w-full block border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium py-2.5 rounded-xl transition text-center text-sm"
+          >
+            View Details
+          </Link>
+        </div>
       </div>
     </div>
   );
