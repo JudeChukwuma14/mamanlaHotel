@@ -31,7 +31,7 @@ export const PublicOnlyRoute =()=>{
     const isAdmin = useSelector(selectIsAdmin)
 
     if(!isAuthenticated) return <Outlet/>
-    return <Navigate to={isAdmin ? "/dashboard": "/"} replace/>
+    return <Navigate to={isAdmin ? "/admin/dashboard": "/"} replace/>
 }
 
 

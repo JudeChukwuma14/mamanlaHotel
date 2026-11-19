@@ -1,18 +1,25 @@
 import React, { lazy, useEffect, useState, Suspense } from "react";
 import Header from "./components/static/Header";
 import Footer from "./components/static/Footer";
-import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Outlet, useLocation } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import SplashScreen from "./components/SplashScreen";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute } from "./auth/AuthGuards";
+import AdminSiderbar from "./components/static/AdminSiderbar";
+import AdminHeader from "./components/static/AdminHeader";
+import Dashboard from "./admin/Dashboard";
+import AdminBooking from "./admin/AdminBooking";
+import AdminRoom from "./admin/AdminRoom";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Services = lazy(() => import("./pages/Services"));
 const Booking = lazy(() => import("./pages/Booking"));
-const BookingConfirmation = lazy(() => import("./pages/BookingConfirmationPage"));
+const BookingConfirmation = lazy(
+  () => import("./pages/BookingConfirmationPage"),
+);
 const MyBookings = lazy(() => import("./pages/MyBookingsPage"));
 const Login = lazy(() => import("./auth/Login"));
 const Register = lazy(() => import("./auth/Register"));
@@ -51,6 +58,34 @@ const AuthLayout = ({ children }) => (
     </main>
   </div>
 );
+
+const AdminLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+const location = useLocation()
+  useEffect(()=>{
+    setSidebarOpen(false)
+  },[location.pathname])
+return(
+  
+  <div className=" min-h-screen flex flex-col">
+    <AdminSiderbar isOpen={sidebarOpen} onClose={()=>setSidebarOpen(false)} />
+
+    <div className=" lg:pl-72 flex flex-col min-h-screen min-w-0 transition-all duration-300">
+      <AdminHeader onOpenSidebar={()=> setSidebarOpen(true)}  />
+
+      <main className=" flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-[50vh]"></div>
+          }
+        >
+          {children || <Outlet />}
+        </Suspense>
+      </main>
+    </div>
+  </div>
+)
+};
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -106,6 +141,14 @@ const App = () => {
             <Route path="/verify-otp" element={<Otp />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
+          </Route>
+
+
+          {/* Admin */}
+          <Route element={<AdminLayout />}>
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/bookings" element={<AdminBooking />} />
+            <Route path="/admin/rooms" element={<AdminRoom />} />
           </Route>
         </Routes>
       )}
